@@ -293,29 +293,21 @@ const PrintArrayCard: React.FC<PrintArrayCardProps> = ({
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
-                  position: 'relative',
-                  paddingLeft: index === 0 ? '12px' : '0px', // Extra padding for first port
+                  position: 'absolute',
+                  left: '-20px', // Position at the left edge of the card
+		  bottom: '5px',
+                  top: `${index * 24}px`, // Stack multiple ports vertically
+                  zIndex: 10,
                 }}
               >
-                {/* Port Circle - positioned to left edge */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    left: index === 0 ? '-8px' : `${-8 - (index * 60)}px`,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    zIndex: 10,
-                  }}
-                >
-                  <Port
-                    port={port}
-                    cardId={card.id}
-                    onConnectionStart={onConnectionStart}
-                    onConnectionEnd={onConnectionEnd}
-                    onPortValueChange={onPortValueChange}
-                    isConnecting={isConnecting}
-                  />
-                </div>
+                <Port
+                  port={port}
+                  cardId={card.id}
+                  onConnectionStart={onConnectionStart}
+                  onConnectionEnd={onConnectionEnd}
+                  onPortValueChange={onPortValueChange}
+                  isConnecting={isConnecting}
+                />
               </div>
             );
           })}
@@ -346,29 +338,21 @@ const PrintArrayCard: React.FC<PrintArrayCardProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '4px',
-                position: 'relative',
-                paddingRight: index === card.outputPorts.length - 1 ? '12px' : '0px', // Extra padding for last port
+                position: 'absolute',
+                right: '-25px', // Position at the right edge of the card
+		bottom: '5px',
+                top: `${index * 24}px`, // Stack multiple ports vertically
+                zIndex: 10,
               }}
             >
-              {/* Port Circle - positioned to right edge */}
-              <div
-                style={{
-                  position: 'absolute',
-                  right: index === card.outputPorts.length - 1 ? '-8px' : `${-8 + ((card.outputPorts.length - 1 - index) * 60)}px`,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  zIndex: 10,
-                }}
-              >
-                <Port
-                  port={port}
-                  cardId={card.id}
-                  onConnectionStart={onConnectionStart}
-                  onConnectionEnd={onConnectionEnd}
-                  onPortValueChange={onPortValueChange}
-                  isConnecting={isConnecting}
-                />
-              </div>
+              <Port
+                port={port}
+                cardId={card.id}
+                onConnectionStart={onConnectionStart}
+                onConnectionEnd={onConnectionEnd}
+                onPortValueChange={onPortValueChange}
+                isConnecting={isConnecting}
+              />
             </div>
           ))}
         </div>
@@ -388,36 +372,36 @@ const PrintArrayCard: React.FC<PrintArrayCardProps> = ({
           onMouseDown={handleResizeMouseDown}
           style={{
             position: 'absolute',
-            bottom: '20px',
+            bottom: '19px',
             right: '0px',
-          width: '20px',
-          height: '20px',
-          background: '#111827',
-          cursor: 'se-resize',
-          borderRadius: '0 0 12px 0',
-          border: '2px solid #111827',
-          borderTop: 'none',
-          borderLeft: 'none',
-          zIndex: 21,
-          padding: 0,
-          display: 'flex',
-          alignItems: 'flex-end',
-          justifyContent: 'flex-end',
-        }}
-        title="Drag to resize"
-        aria-label="Resize card"
-        >
-          <div
-            style={{
-              width: '0',
-              height: '0',
-              borderLeft: '6px solid transparent',
-              borderBottom: '6px solid #9ca3af',
-              marginRight: '2px',
-              marginBottom: '2px',
-            }}
-          />
-        </button>
+            width: '20px',
+            height: '20px',
+            background: '#111827',
+            cursor: 'se-resize',
+            borderRadius: '0 0 12px 0',
+            border: '2px solid #111827',
+            borderTop: 'none',
+            borderLeft: 'none',
+            zIndex: 21,
+            padding: 0,
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'flex-end',
+          }}
+          title="Drag to resize"
+          aria-label="Resize card"
+          >
+            <div
+              style={{
+                width: '0',
+                height: '0',
+                borderLeft: '6px solid transparent',
+                borderBottom: '6px solid #9ca3af',
+                marginRight: '2px',
+                marginBottom: '2px',
+              }}
+            />
+          </button>
       </div>
     </div>
   );

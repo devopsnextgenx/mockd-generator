@@ -283,7 +283,6 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
           justifyContent: 'space-between',
           alignItems: 'center',
           position: 'relative',
-          borderRadius: '0 0 10px 10px',
           minHeight: '40px',
           paddingRight: '40px', // Extra padding for resize handle
         }}
@@ -297,29 +296,21 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '4px',
-                position: 'relative',
-                paddingLeft: index === 0 ? '12px' : '0px', // Extra padding for first port
+                position: 'absolute',
+                left: '-20px', // Position at the left edge of the card
+		bottom: '5px',
+                top: `${index * 24}px`, // Stack multiple ports vertically
+                zIndex: 10,
               }}
             >
-              {/* Port Circle - positioned to left edge */}
-              <div
-                style={{
-                  position: 'absolute',
-                  left: index === 0 ? '-8px' : `${-8 + (index * 60)}px`, // Stagger multiple ports
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  zIndex: 10,
-                }}
-              >
-                <Port
-                  port={port}
-                  cardId={card.id}
-                  onConnectionStart={onConnectionStart}
-                  onConnectionEnd={onConnectionEnd}
-                  onPortValueChange={onPortValueChange}
-                  isConnecting={isConnecting}
-                />
-              </div>
+              <Port
+                port={port}
+                cardId={card.id}
+                onConnectionStart={onConnectionStart}
+                onConnectionEnd={onConnectionEnd}
+                onPortValueChange={onPortValueChange}
+                isConnecting={isConnecting}
+              />
             </div>
           ))}
         </div>
@@ -349,29 +340,21 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '4px',
-                position: 'relative',
-                paddingRight: index === card.outputPorts.length - 1 ? '12px' : '0px', // Extra padding for last port
+                position: 'absolute',
+                right: '-50px', // Position at the right edge of the card
+		bottom: '5px',
+                top: `${index * 24}px`, // Stack multiple ports vertically
+                zIndex: 10,
               }}
             >
-              {/* Port Circle - positioned to right edge */}
-              <div
-                style={{
-                  position: 'absolute',
-                  right: index === card.outputPorts.length - 1 ? '-8px' : `${-8 + ((card.outputPorts.length - 1 - index) * 60)}px`,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  zIndex: 10,
-                }}
-              >
-                <Port
-                  port={port}
-                  cardId={card.id}
-                  onConnectionStart={onConnectionStart}
-                  onConnectionEnd={onConnectionEnd}
-                  onPortValueChange={onPortValueChange}
-                  isConnecting={isConnecting}
-                />
-              </div>
+              <Port
+                port={port}
+                cardId={card.id}
+                onConnectionStart={onConnectionStart}
+                onConnectionEnd={onConnectionEnd}
+                onPortValueChange={onPortValueChange}
+                isConnecting={isConnecting}
+              />
             </div>
           ))}
         </div>
@@ -391,7 +374,7 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
           onMouseDown={handleResizeMouseDown}
           style={{
             position: 'absolute',
-            bottom: '20px',
+            bottom: '19px',
             right: '0px',
             width: '20px',
             height: '20px',
