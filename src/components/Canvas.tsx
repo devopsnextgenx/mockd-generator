@@ -184,7 +184,7 @@ const Canvas: React.FC<CanvasProps> = ({
       sourceX = rect.left + rect.width / 2 - canvasRect.left;
       sourceY = rect.top + rect.height / 2 - canvasRect.top;
     } else {
-      // Fallback to calculation
+      // Fallback to calculation - since ports are now in footer
       const sourceOutputIndex = sourceCard.outputPorts.indexOf(sourcePort);
       
       // Check if source card is JsonPreviewCard or PrintArrayCard (output cards)
@@ -194,20 +194,21 @@ const Canvas: React.FC<CanvasProps> = ({
                                 sourceCard.definitionId === 'json-preview';
       
       if (isSourceOutputCard) {
-        // For JsonPreviewCard and PrintArrayCard, calculate position more accurately
-        sourceX = sourceCard.position.x + 400; // Card max-width is 400px, so right edge
+        // For JsonPreviewCard and PrintArrayCard, ports are now in footer
+        // Calculate position based on footer layout
+        const cardWidth = 400; // Default card width
+        const footerHeight = 40; // Footer height
+        const cardHeight = 500; // Default card height
         
-        const baseCardHeight = 40; // header
-        const inputSectionHeight = 60; // input ports section  
-        const resizeControlsHeight = 40; // resize controls
-        const editorHeight = 300; // default editor height (could be dynamic)
-        const statusBarHeight = 30; // status bar
-        const totalCardHeight = baseCardHeight + inputSectionHeight + resizeControlsHeight + editorHeight + statusBarHeight;
+        // Output ports are on the right side of footer, positioned with gap of 12px
+        // Each port takes about 60px of space (name + port + gap)
+        const portSpacing = 60;
+        const startOffsetFromRight = 20; // Initial offset from right edge
         
-        const portBottomOffset = 20 + (sourceCard.outputPorts.length - 1 - sourceOutputIndex) * 25;
-        sourceY = sourceCard.position.y + totalCardHeight - portBottomOffset;
+        sourceX = sourceCard.position.x + cardWidth - startOffsetFromRight - (sourceOutputIndex * portSpacing);
+        sourceY = sourceCard.position.y + cardHeight - (footerHeight / 2); // Center of footer
       } else {
-        // For regular cards, output ports are positioned from the bottom
+        // For regular cards, output ports are still on the right side
         sourceX = sourceCard.position.x + 200; // Right edge of card
         
         // Calculate card height - regular cards have a minimum height of 120px
@@ -240,7 +241,7 @@ const Canvas: React.FC<CanvasProps> = ({
         width: '100%',
         height: '100%',
         position: 'relative',
-        overflow: 'hidden',
+        overflow: 'auto',
         background: 'linear-gradient(180deg, #374151 0%, #1f2937 100%)',
       }}
     >

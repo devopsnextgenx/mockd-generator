@@ -15,10 +15,11 @@ const getPropertyValue = (properties: CardProperty[], name: string): unknown => 
 // Person Generator
 export const personGenerator: ExecutorFunction = (inputs, properties) => {
   const count = Number(inputs.count) || 10;
-  const includeEmail = Boolean(getPropertyValue(properties, 'includeEmail'));
-  const includePhone = Boolean(getPropertyValue(properties, 'includePhone'));
-  const includeAddress = Boolean(getPropertyValue(properties, 'includeAddress'));
-  const ageRange = String(getPropertyValue(properties, 'ageRange'));
+  // Check inputs first, then fallback to properties
+  const includeEmail = Boolean(inputs.includeEmail ?? getPropertyValue(properties, 'includeEmail'));
+  const includePhone = Boolean(inputs.includePhone ?? getPropertyValue(properties, 'includePhone'));
+  const includeAddress = Boolean(inputs.includeAddress ?? getPropertyValue(properties, 'includeAddress'));
+  const ageRange = String(inputs.ageRange ?? getPropertyValue(properties, 'ageRange'));
 
   const persons = Array.from({ length: count }, () => {
     let age: number;
@@ -77,9 +78,10 @@ export const personGenerator: ExecutorFunction = (inputs, properties) => {
 // Company Generator
 export const companyGenerator: ExecutorFunction = (inputs, properties) => {
   const count = Number(inputs.count) || 10;
-  const includeAddress = Boolean(getPropertyValue(properties, 'includeAddress'));
-  const includeWebsite = Boolean(getPropertyValue(properties, 'includeWebsite'));
-  const companySize = String(getPropertyValue(properties, 'companySize'));
+  // Check inputs first, then fallback to properties
+  const includeAddress = Boolean(inputs.includeAddress ?? getPropertyValue(properties, 'includeAddress'));
+  const includeWebsite = Boolean(inputs.includeWebsite ?? getPropertyValue(properties, 'includeWebsite'));
+  const companySize = String(inputs.companySize ?? getPropertyValue(properties, 'companySize'));
 
   const companies = Array.from({ length: count }, () => {
     let employees: number;
@@ -131,9 +133,10 @@ export const companyGenerator: ExecutorFunction = (inputs, properties) => {
 // Number Generator
 export const numberGenerator: ExecutorFunction = (inputs, properties) => {
   const count = Number(inputs.count) || 10;
-  const min = Number(getPropertyValue(properties, 'min')) || 1;
-  const max = Number(getPropertyValue(properties, 'max')) || 100;
-  const precision = Number(getPropertyValue(properties, 'precision')) || 0;
+  // Check inputs first, then fallback to properties
+  const min = Number(inputs.min ?? getPropertyValue(properties, 'min')) || 1;
+  const max = Number(inputs.max ?? getPropertyValue(properties, 'max')) || 100;
+  const precision = Number(inputs.precision ?? getPropertyValue(properties, 'precision')) || 0;
 
   const numbers = Array.from({ length: count }, () => {
     if (precision === 0) {
@@ -149,7 +152,8 @@ export const numberGenerator: ExecutorFunction = (inputs, properties) => {
 // Phone Generator
 export const phoneGenerator: ExecutorFunction = (inputs, properties) => {
   const count = Number(inputs.count) || 10;
-  const format = String(getPropertyValue(properties, 'format'));
+  // Check inputs first, then fallback to properties
+  const format = String(inputs.format ?? getPropertyValue(properties, 'format'));
 
   const phones = Array.from({ length: count }, () => {
     switch (format) {
@@ -170,8 +174,9 @@ export const phoneGenerator: ExecutorFunction = (inputs, properties) => {
 // Internet Generator
 export const internetGenerator: ExecutorFunction = (inputs, properties) => {
   const count = Number(inputs.count) || 10;
-  const dataType = String(getPropertyValue(properties, 'dataType'));
-  const provider = String(getPropertyValue(properties, 'provider'));
+  // Check inputs first, then fallback to properties
+  const dataType = String(inputs.dataType ?? getPropertyValue(properties, 'dataType'));
+  const provider = String(inputs.provider ?? getPropertyValue(properties, 'provider'));
 
   const data = Array.from({ length: count }, () => {
     switch (dataType) {
@@ -200,8 +205,9 @@ export const internetGenerator: ExecutorFunction = (inputs, properties) => {
 // Location Generator
 export const locationGenerator: ExecutorFunction = (inputs, properties) => {
   const count = Number(inputs.count) || 10;
-  const includeCoordinates = Boolean(getPropertyValue(properties, 'includeCoordinates'));
-  const locationType = String(getPropertyValue(properties, 'locationType'));
+  // Check inputs first, then fallback to properties
+  const includeCoordinates = Boolean(inputs.includeCoordinates ?? getPropertyValue(properties, 'includeCoordinates'));
+  const locationType = String(inputs.locationType ?? getPropertyValue(properties, 'locationType'));
 
   const locations = Array.from({ length: count }, () => {
     const location: Record<string, unknown> = {
@@ -254,9 +260,10 @@ export const filterGenerator: ExecutorFunction = (inputs, properties) => {
     return { filtered: [] };
   }
 
-  const field = String(getPropertyValue(properties, 'field'));
-  const operator = String(getPropertyValue(properties, 'operator'));
-  const value = getPropertyValue(properties, 'value');
+  // Check inputs first, then fallback to properties
+  const field = String(inputs.field ?? getPropertyValue(properties, 'field'));
+  const operator = String(inputs.operator ?? getPropertyValue(properties, 'operator'));
+  const value = inputs.value ?? getPropertyValue(properties, 'value');
 
   const filtered = array.filter(item => {
     if (typeof item !== 'object' || item === null) {
@@ -291,8 +298,9 @@ export const transformGenerator: ExecutorFunction = (inputs, properties) => {
     return { transformed: [] };
   }
 
-  const operation = String(getPropertyValue(properties, 'operation'));
-  const field = String(getPropertyValue(properties, 'field'));
+  // Check inputs first, then fallback to properties
+  const operation = String(inputs.operation ?? getPropertyValue(properties, 'operation'));
+  const field = String(inputs.field ?? getPropertyValue(properties, 'field'));
 
   let transformed: unknown[];
 

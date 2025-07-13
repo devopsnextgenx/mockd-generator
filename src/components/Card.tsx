@@ -148,18 +148,33 @@ const Card: React.FC<CardProps> = ({
           position: 'absolute',
           left: card.position.x,
           top: card.position.y,
-          minWidth: '200px',
-          minHeight: '120px',
-          border: '2px solid #10b981', // Make cards highly visible for testing
+          minWidth: '220px',
+          minHeight: '140px',
+          border: '2px solid #10b981',
           backgroundColor: '#1f2937',
-          zIndex: 100, // Ensure they appear on top
-          cursor: isDragging ? 'grabbing' : 'grab'
+          zIndex: 100,
+          cursor: isDragging ? 'grabbing' : 'grab',
+          display: 'flex',
+          flexDirection: 'column'
         }}
       >
         {/* Card Header */}
-        <div className="card-header">
-          <h3 className="card-title">
-            {card.name}
+        <div className="card-header" style={{
+          padding: '8px 12px',
+          borderBottom: '1px solid #374151',
+          backgroundColor: '#111827',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          minHeight: '40px'
+        }}>
+          <h3 className="card-title" style={{
+            margin: 0,
+            fontSize: '0.9rem',
+            color: '#f9fafb',
+            fontWeight: '600'
+          }}>
+            {card.name} [{card.id}]
           </h3>
           <button
             type="button"
@@ -169,79 +184,159 @@ const Card: React.FC<CardProps> = ({
               setIsExpanded(!isExpanded);
             }}
             aria-label={isExpanded ? 'Collapse card' : 'Expand card'}
+            style={{
+              background: 'none',
+              border: '1px solid #374151',
+              color: '#d1d5db',
+              width: '24px',
+              height: '24px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
             {isExpanded ? '−' : '+'}
           </button>
         </div>
 
         {/* Card Body - Properties */}
-        {isExpanded && (
-          <div className="card-body">
+        <div className="card-body" style={{
+          flex: 1,
+          padding: isExpanded ? '12px' : '8px',
+          backgroundColor: '#1f2937',
+          overflow: 'auto'
+        }}>
+          {isExpanded && card.properties.length > 0 && (
             <div className="properties-section">
-              <h4>Properties</h4>
+              <h4 style={{ 
+                margin: '0 0 8px 0', 
+                fontSize: '0.8rem', 
+                color: '#9ca3af',
+                fontWeight: '500'
+              }}>
+                Properties
+              </h4>
               {card.properties.map((property) => (
-                <div key={property.name} className="property-item">
-                  <label className="property-label">
+                <div key={property.name} className="property-item" style={{
+                  marginBottom: '8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px'
+                }}>
+                  <label className="property-label" style={{
+                    fontSize: '0.7rem',
+                    color: '#d1d5db',
+                    fontWeight: '500'
+                  }}>
                     {property.name}
                   </label>
                   {renderPropertyInput(property)}
                   {property.description && (
-                    <span className="property-description">
+                    <span className="property-description" style={{
+                      fontSize: '0.65rem',
+                      color: '#6b7280',
+                      fontStyle: 'italic'
+                    }}>
                       {property.description}
                     </span>
                   )}
                 </div>
               ))}
             </div>
-          </div>
-        )}
-
-        {/* Input Ports - Left side */}
-        <div className="ports-section input-ports">
-          {card.inputPorts.map((port, index) => (
-            <div
-              key={port.id}
-              className="port-wrapper input-port"
-              style={{
-                position: 'absolute',
-                left: '-6px',
-                top: `${40 + index * 25}px`, // Start from top of card body, space them out
-              }}
-            >
-              <Port
-                port={port}
-                cardId={card.id}
-                onConnectionStart={onConnectionStart}
-                onConnectionEnd={onConnectionEnd}
-                onPortValueChange={onPortValueChange}
-                isConnecting={isConnecting}
-              />
+          )}
+          {!isExpanded && (
+            <div style={{
+              fontSize: '0.7rem',
+              color: '#6b7280',
+              textAlign: 'center'
+            }}>
+              Click + to expand properties
             </div>
-          ))}
+          )}
         </div>
 
-        {/* Output Ports - Right side */}
-        <div className="ports-section output-ports">
-          {card.outputPorts.map((port, index) => (
-            <div
-              key={port.id}
-              className="port-wrapper output-port"
-              style={{
-                position: 'absolute',
-                right: '-6px',
-                bottom: `${20 + (card.outputPorts.length - 1 - index) * 25}px`, // Start from bottom, space them out
-              }}
-            >
-              <Port
-                port={port}
-                cardId={card.id}
-                onConnectionStart={onConnectionStart}
-                onConnectionEnd={onConnectionEnd}
-                onPortValueChange={onPortValueChange}
-                isConnecting={isConnecting}
-              />
-            </div>
-          ))}
+        {/* Card Footer - Ports */}
+        <div className="card-footer" style={{
+          position: 'relative',
+          minHeight: '50px',
+          borderTop: '1px solid #374151',
+          backgroundColor: '#111827',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '8px 16px'
+        }}>
+          {/* Input Ports - Left side */}
+          <div className="input-ports-section" style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+            alignItems: 'flex-start'
+          }}>
+            {card.inputPorts.map((port, index) => (
+              <div
+                key={port.id}
+                className="port-wrapper input-port"
+                style={{
+                  position: 'absolute',
+                  left: '-8px',
+                  top: `${8 + index * 28}px`,
+                  zIndex: 15
+                }}
+              >
+                <Port
+                  port={port}
+                  cardId={card.id}
+                  onConnectionStart={onConnectionStart}
+                  onConnectionEnd={onConnectionEnd}
+                  onPortValueChange={onPortValueChange}
+                  isConnecting={isConnecting}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Center space for visual balance */}
+          <div style={{
+            flex: 1,
+            textAlign: 'center',
+            fontSize: '0.65rem',
+            color: '#4b5563'
+          }}>
+            {card.inputPorts.length > 0 && card.outputPorts.length > 0 && '⟷'}
+          </div>
+
+          {/* Output Ports - Right side */}
+          <div className="output-ports-section" style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+            alignItems: 'flex-end'
+          }}>
+            {card.outputPorts.map((port, index) => (
+              <div
+                key={port.id}
+                className="port-wrapper output-port"
+                style={{
+                  position: 'absolute',
+                  right: '-8px',
+                  top: `${8 + index * 28}px`,
+                  zIndex: 15
+                }}
+              >
+                <Port
+                  port={port}
+                  cardId={card.id}
+                  onConnectionStart={onConnectionStart}
+                  onConnectionEnd={onConnectionEnd}
+                  onPortValueChange={onPortValueChange}
+                  isConnecting={isConnecting}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
   );

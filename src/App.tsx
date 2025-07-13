@@ -385,6 +385,7 @@ const App: React.FC = () => {
             );
             
             if (connection) {
+              // Use connected input value
               const sourceCardOutputs = cardOutputs[connection.sourceCardId];
               if (sourceCardOutputs) {
                 const sourceCard = pipeline.cards.find(c => c.id === connection.sourceCardId);
@@ -392,6 +393,13 @@ const App: React.FC = () => {
                 if (sourcePort) {
                   inputs[inputPort.name] = sourceCardOutputs[sourcePort.name];
                 }
+              }
+            } else {
+              // Use manually entered value from input port
+              if (inputPort.value !== null && inputPort.value !== undefined) {
+                inputs[inputPort.name] = inputPort.value;
+              } else if (inputPort.defaultValue !== null && inputPort.defaultValue !== undefined) {
+                inputs[inputPort.name] = inputPort.defaultValue;
               }
             }
           }
