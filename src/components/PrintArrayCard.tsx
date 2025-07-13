@@ -270,10 +270,10 @@ const PrintArrayCard: React.FC<PrintArrayCardProps> = ({
       {/* Footer with Ports */}
       <div
         style={{
-          backgroundColor: '#007acc',
+          backgroundColor: '#111827',
           padding: '8px 16px 8px 12px', // Extra right padding for resize handle clearance
           borderRadius: '0 0 12px 12px',
-          paddingBottom: '30px', // Extra space for resize handle
+          paddingBottom: '18px', // Extra space for resize handle
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -389,13 +389,13 @@ const PrintArrayCard: React.FC<PrintArrayCardProps> = ({
           style={{
             position: 'absolute',
             bottom: '20px',
-            right: '-2px',
+            right: '0px',
           width: '20px',
           height: '20px',
-          background: '#6b7280',
+          background: '#111827',
           cursor: 'se-resize',
           borderRadius: '0 0 12px 0',
-          border: '2px solid #374151',
+          border: '2px solid #111827',
           borderTop: 'none',
           borderLeft: 'none',
           zIndex: 21,
@@ -406,18 +406,18 @@ const PrintArrayCard: React.FC<PrintArrayCardProps> = ({
         }}
         title="Drag to resize"
         aria-label="Resize card"
-      >
-        <div
-          style={{
-            width: '0',
-            height: '0',
-            borderLeft: '6px solid transparent',
-            borderBottom: '6px solid #9ca3af',
-            marginRight: '2px',
-            marginBottom: '2px',
-          }}
-        />
-      </button>
+        >
+          <div
+            style={{
+              width: '0',
+              height: '0',
+              borderLeft: '6px solid transparent',
+              borderBottom: '6px solid #9ca3af',
+              marginRight: '2px',
+              marginBottom: '2px',
+            }}
+          />
+        </button>
       </div>
     </div>
   );
