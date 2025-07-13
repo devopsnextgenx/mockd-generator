@@ -56,6 +56,22 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
     }
   }, [inputData]);
 
+  // Update editor height when card height changes
+  useEffect(() => {
+    const headerHeight = 40;
+    const resizeControlsHeight = 48;
+    const footerHeight = 40;
+    const bottomPaddingHeight = 20; // New bottom padding area
+    const minEditorHeight = 150;
+    
+    const availableHeight = cardHeight - headerHeight - resizeControlsHeight - footerHeight - bottomPaddingHeight;
+    const newEditorHeight = Math.max(minEditorHeight, availableHeight);
+    
+    if (newEditorHeight !== editorHeight) {
+      setEditorHeight(newEditorHeight);
+    }
+  }, [cardHeight, editorHeight]);
+
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!(e.target as Element).closest('.card-header')) return;
     
@@ -101,7 +117,7 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
   }, []);
 
   useEffect(() => {
-    if (isDragging) {
+    if (isDragging || isResizing) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     }
@@ -110,7 +126,7 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, handleMouseMove, handleMouseUp]);
+  }, [isDragging, isResizing, handleMouseMove, handleMouseUp]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -126,10 +142,10 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
 
   const handleResize = (direction: 'up' | 'down') => {
     const increment = 50;
-    if (direction === 'up' && editorHeight > 150) {
-      setEditorHeight(editorHeight - increment);
-    } else if (direction === 'down' && editorHeight < 600) {
-      setEditorHeight(editorHeight + increment);
+    if (direction === 'up' && cardHeight > 300) {
+      setCardHeight(cardHeight - increment);
+    } else if (direction === 'down' && cardHeight < 800) {
+      setCardHeight(cardHeight + increment);
     }
   };
 
@@ -177,7 +193,7 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
 
       {/* Card Body */}
       {isExpanded && (
-        <div className="card-body" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100% - 80px)' }}>
+        <div className="card-body" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100% - 100px)' }}>
           {/* Resize Controls */}
           <div
             style={{
@@ -191,7 +207,7 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
           >
             <button
               onClick={() => handleResize('up')}
-              disabled={editorHeight <= 150}
+              disabled={cardHeight <= 300}
               style={{
                 background: '#007acc',
                 border: 'none',
@@ -200,17 +216,17 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
                 borderRadius: '3px',
                 fontSize: '12px',
                 cursor: 'pointer',
-                opacity: editorHeight <= 150 ? 0.5 : 1,
+                opacity: cardHeight <= 300 ? 0.5 : 1,
               }}
             >
-              ↑ Shrink
+              ↑ Smaller
             </button>
             <span style={{ color: '#cccccc', fontSize: '12px', alignSelf: 'center' }}>
-              {editorHeight}px
+              {cardHeight}px
             </span>
             <button
               onClick={() => handleResize('down')}
-              disabled={editorHeight >= 600}
+              disabled={cardHeight >= 800}
               style={{
                 background: '#007acc',
                 border: 'none',
@@ -219,10 +235,10 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
                 borderRadius: '3px',
                 fontSize: '12px',
                 cursor: 'pointer',
-                opacity: editorHeight >= 600 ? 0.5 : 1,
+                opacity: cardHeight >= 800 ? 0.5 : 1,
               }}
             >
-              ↓ Expand
+              ↓ Larger
             </button>
           </div>
 
@@ -260,20 +276,21 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
       <div
         style={{
           backgroundColor: '#007acc',
-          padding: '8px 12px',
-          color: 'white',
-          fontSize: '12px',
+          padding: '8px 16px 8px 12px', // Extra right padding for resize handle clearance
+          borderRadius: '0 0 12px 12px',
+          paddingBottom: '30px', // Extra space for resize handle
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           position: 'relative',
           borderRadius: '0 0 10px 10px',
           minHeight: '40px',
+          paddingRight: '40px', // Extra padding for resize handle
         }}
       >
-        {/* Input Ports */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {card.inputPorts.map((port) => (
+        {/* Input Ports - Left Side */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', position: 'relative' }}>
+          {card.inputPorts.map((port, index) => (
             <div
               key={port.id}
               style={{
@@ -281,14 +298,17 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
                 alignItems: 'center',
                 gap: '4px',
                 position: 'relative',
+                paddingLeft: index === 0 ? '12px' : '0px', // Extra padding for first port
               }}
             >
+              {/* Port Circle - positioned to left edge */}
               <div
                 style={{
                   position: 'absolute',
-                  left: '-20px',
+                  left: index === 0 ? '-8px' : `${-8 + (index * 60)}px`, // Stagger multiple ports
                   top: '50%',
                   transform: 'translateY(-50%)',
+                  zIndex: 10,
                 }}
               >
                 <Port
@@ -300,21 +320,29 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
                   isConnecting={isConnecting}
                 />
               </div>
-              <span style={{ fontSize: '11px', fontWeight: '500' }}>{port.name}</span>
             </div>
           ))}
         </div>
 
         {/* Center Status */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span>JSON Preview</span>
-          <span>•</span>
-          <span>{getDataType()} • {jsonString.length} chars</span>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '8px',
+          flex: 1,
+          justifyContent: 'center',
+          minWidth: 0, // Allow flex shrinking
+        }}>
+          <span style={{ fontSize: '11px', whiteSpace: 'nowrap' }}>JSON Preview</span>
+          <span style={{ fontSize: '10px' }}>•</span>
+          <span style={{ fontSize: '10px', whiteSpace: 'nowrap' }}>
+            {getDataType()} • {jsonString.length} chars
+          </span>
         </div>
 
-        {/* Output Ports */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {card.outputPorts.map((port) => (
+        {/* Output Ports - Right Side */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', position: 'relative' }}>
+          {card.outputPorts.map((port, index) => (
             <div
               key={port.id}
               style={{
@@ -322,15 +350,17 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
                 alignItems: 'center',
                 gap: '4px',
                 position: 'relative',
+                paddingRight: index === card.outputPorts.length - 1 ? '12px' : '0px', // Extra padding for last port
               }}
             >
-              <span style={{ fontSize: '11px', fontWeight: '500' }}>{port.name}</span>
+              {/* Port Circle - positioned to right edge */}
               <div
                 style={{
                   position: 'absolute',
-                  right: '-20px',
+                  right: index === card.outputPorts.length - 1 ? '-8px' : `${-8 + ((card.outputPorts.length - 1 - index) * 60)}px`,
                   top: '50%',
                   transform: 'translateY(-50%)',
+                  zIndex: 10,
                 }}
               >
                 <Port
@@ -347,40 +377,51 @@ const JsonPreviewCard: React.FC<JsonPreviewCardProps> = ({
         </div>
       </div>
 
-      {/* Resize Handle */}
-      <button
-        type="button"
-        onMouseDown={handleResizeMouseDown}
+      {/* Bottom padding area for resize handle */}
+      <div
         style={{
-          position: 'absolute',
-          bottom: '0px',
-          right: '0px',
-          width: '15px',
-          height: '15px',
-          background: '#6b7280',
-          cursor: 'nw-resize',
-          borderRadius: '0 0 10px 0',
-          border: '2px solid #374151',
-          borderTop: 'none',
-          borderLeft: 'none',
-          zIndex: 20,
-          padding: 0,
+          height: '20px',
+          position: 'relative',
+          backgroundColor: 'transparent',
         }}
-        title="Drag to resize"
-        aria-label="Resize card"
       >
-        <div
+        {/* Resize Handle */}
+        <button
+          type="button"
+          onMouseDown={handleResizeMouseDown}
           style={{
             position: 'absolute',
-            bottom: '2px',
-            right: '2px',
-            width: '0',
-            height: '0',
-            borderLeft: '8px solid transparent',
-            borderBottom: '8px solid #9ca3af',
+            bottom: '20px',
+            right: '-2px',
+            width: '20px',
+            height: '20px',
+            background: '#6b7280',
+            cursor: 'se-resize',
+            borderRadius: '0 0 12px 0',
+            border: '2px solid #374151',
+            borderTop: 'none',
+            borderLeft: 'none',
+            zIndex: 21,
+            padding: 0,
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'flex-end',
           }}
-        />
-      </button>
+          title="Drag to resize"
+          aria-label="Resize card"
+        >
+          <div
+            style={{
+              width: '0',
+              height: '0',
+              borderLeft: '6px solid transparent',
+              borderBottom: '6px solid #9ca3af',
+              marginRight: '2px',
+              marginBottom: '2px',
+            }}
+          />
+        </button>
+      </div>
     </div>
   );
 };
