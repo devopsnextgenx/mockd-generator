@@ -1,0 +1,614 @@
+/* App Layout */
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.app-header {
+  background: #1e293b;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pipeline-name-input {
+  padding: 0.5rem;
+  border: 1px solid #475569;
+  border-radius: 4px;
+  background: #334155;
+  color: white;
+  font-size: 0.9rem;
+}
+
+.pipeline-name-input::placeholder {
+  color: #94a3b8;
+}
+
+.toolbar-button {
+  padding: 0.5rem 1rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.toolbar-button:hover {
+  background: #2563eb;
+}
+
+.toolbar-button:disabled {
+  background: #64748b;
+  cursor: not-allowed;
+}
+
+.execute-button {
+  background: #10b981;
+}
+
+.execute-button:hover {
+  background: #059669;
+}
+
+.file-input-label {
+  cursor: pointer;
+}
+
+.app-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 300px;
+  background: #1f2937;
+  border-right: 1px solid #374151;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.sidebar h3 {
+  margin: 0 0 1rem 0;
+  color: #f9fafb;
+  font-size: 1.1rem;
+}
+
+.card-library {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Override Bootstrap card styles for library cards */
+.card-library .library-card {
+  padding: 0 !important;
+  background: #374151 !important;
+  border: 1px solid #4b5563 !important;
+  border-radius: 8px !important;
+  cursor: grab !important;
+  transition: all 0.2s !important;
+  margin-bottom: 0.5rem !important;
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  text-align: left !important;
+}
+
+.card-library .library-card:active {
+  cursor: grabbing !important;
+}
+
+.card-library .library-card:hover {
+  border-color: #3b82f6 !important;
+  background: #4b5563 !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2) !important;
+  transform: translateY(-1px) !important;
+}
+
+.card-library .library-card:focus {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+}
+
+.card-library .library-card .library-card-body {
+  padding: 0.75rem !important;
+}
+
+.card-library .library-card .library-card-title {
+  margin: 0 0 0.25rem 0 !important;
+  color: #f9fafb !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+}
+
+.card-library .library-card .library-card-text {
+  margin: 0 0 0.5rem 0 !important;
+  color: #d1d5db !important;
+  font-size: 0.8rem !important;
+  line-height: 1.4 !important;
+}
+
+.card-library .library-card .badge {
+  display: inline-block !important;
+  padding: 0.25rem 0.5rem !important;
+  background: #1f2937 !important;
+  color: #9ca3af !important;
+  border-radius: 4px !important;
+  font-size: 0.7rem !important;
+  font-weight: 500 !important;
+}
+
+/* Execution Results */
+.execution-results {
+  margin-top: 2rem;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.result-item {
+  padding: 0.75rem;
+  background: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 8px;
+}
+
+.result-item.success {
+  border-left: 4px solid #10b981;
+}
+
+.result-item.error {
+  border-left: 4px solid #ef4444;
+}
+
+.result-item h4 {
+  margin: 0 0 0.25rem 0;
+  color: #f9fafb;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.result-item p {
+  margin: 0 0 0.5rem 0;
+  color: #d1d5db;
+  font-size: 0.8rem;
+}
+
+.error-message {
+  color: #ef4444 !important;
+}
+
+.output-data {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.output-data div {
+  margin-bottom: 0.25rem;
+}
+
+.output-data strong {
+  color: #f9fafb;
+}
+
+/* Canvas */
+.canvas-container {
+  flex: 1;
+  position: relative;
+  background: #111827;
+}
+
+.canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.2s;
+}
+
+.canvas.drag-over {
+  background: linear-gradient(180deg, #1e3a5f 0%, #1e293b 100%);
+  box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.connections-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.cards-layer {
+  position: relative;
+  z-index: 2;
+}
+
+/* Cards */
+.card {
+  position: absolute;
+  background: #1f2937;
+  border: 2px solid #374151;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  min-width: 200px;
+  max-width: 300px;
+  cursor: move;
+  user-select: none;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.card.selected {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  z-index: 20;
+}
+
+.card-header {
+  padding: 0.75rem;
+  background: #374151;
+  border-bottom: 1px solid #4b5563;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: move;
+}
+
+.card-title {
+  margin: 0;
+  color: #f9fafb;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.expand-button {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.expand-button:hover {
+  background: #4b5563;
+  color: #f9fafb;
+}
+
+.card-body {
+  padding: 0.75rem;
+  border-bottom: 1px solid #4b5563;
+}
+
+.properties-section h4 {
+  margin: 0 0 0.5rem 0;
+  color: #f9fafb;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.property-item {
+  margin-bottom: 0.75rem;
+}
+
+.property-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #d1d5db;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.property-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #4b5563;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  background: #374151;
+  color: #f9fafb;
+}
+
+.property-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.property-description {
+  display: block;
+  margin-top: 0.25rem;
+  color: #9ca3af;
+  font-size: 0.7rem;
+  line-height: 1.3;
+}
+
+/* Ports */
+.ports-section {
+  position: relative;
+}
+
+.port-wrapper {
+  position: absolute;
+  z-index: 15;
+}
+
+.port-wrapper.input-port {
+  left: -6px;
+}
+
+.port-wrapper.output-port {
+  right: -6px;
+}
+
+.port-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.port-container.input {
+  justify-content: flex-start;
+  flex-direction: row;
+}
+
+.port-container.output {
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+}
+
+.port {
+  width: 12px;
+  height: 12px;
+  border: 2px solid;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #1f2937;
+  z-index: 20;
+}
+
+.port:hover {
+  transform: scale(1.2);
+}
+
+.port.connected {
+  background: currentColor;
+}
+
+.port-label {
+  font-size: 0.7rem;
+  color: #d1d5db;
+  font-weight: 500;
+  white-space: nowrap;
+  background: rgba(31, 41, 55, 0.9);
+  padding: 2px 4px;
+  border-radius: 3px;
+  backdrop-filter: blur(4px);
+}
+
+.port-container.output .port-label {
+  order: -1;
+}
+
+/* Port edit input styling */
+.port-edit-input {
+  font-size: 0.7rem;
+  padding: 2px 4px;
+  border: 1px solid #3b82f6;
+  border-radius: 3px;
+  background: #1f2937;
+  color: #f9fafb;
+  width: 60px;
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.3);
+}
+
+.port-label-button {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  padding: 0;
+  text-align: left;
+}
+
+.port-label-button:hover {
+  text-decoration: underline;
+}
+
+/* Connections */
+.connection {
+  pointer-events: auto;
+}
+
+.connection-path,
+.connection-arrow {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.connection.selected .connection-path,
+.connection.selected .connection-arrow {
+  stroke: #10b981;
+  stroke-width: 3;
+}
+
+.connection-hit-area {
+  cursor: pointer;
+}
+
+/* Bootstrap dark theme overrides */
+.btn-primary {
+  background-color: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+}
+
+.btn-primary:hover {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+}
+
+.btn-outline-primary {
+  color: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+  color: white !important;
+}
+
+.btn-success {
+  background-color: #10b981 !important;
+  border-color: #10b981 !important;
+}
+
+.btn-success:hover {
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+}
+
+/* Ensure cards are visible on canvas */
+.canvas-container .card {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Make sure draggable cards are properly positioned */
+.canvas-container .react-draggable {
+  position: absolute !important;
+}
+
+.canvas-container .react-draggable-dragging {
+  z-index: 100 !important;
+}
+
+/* Ensure card content is visible */
+.canvas .card * {
+  pointer-events: auto;
+}
+
+.canvas .card .card-header {
+  pointer-events: auto;
+}
+
+/* Custom scrollbar for dark theme */
+.results-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.results-list::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+.results-list::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 3px;
+}
+
+.results-list::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* JSON Preview Card Styles */
+.json-preview-card {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.json-preview-card.selected {
+  box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.5);
+}
+
+/* Print Array Card Styles */
+.print-array-card {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.print-array-card.selected {
+  box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.5);
+}
+
+.print-card-header:hover {
+  background-color: #3c3c3c !important;
+}
+
+.print-card-header:focus {
+  outline: 2px solid #007acc;
+  outline-offset: 2px;
+}
+
+/* React Resizable Styles */
+.react-resizable {
+  position: relative;
+}
+
+.react-resizable-handle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  bottom: 0;
+  right: 0;
+  background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgNiA2IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZG90cyBmaWxsPSIjOTk5IiBjeD0iMSIgY3k9IjEiIHI9IjEiLz4KPGN5Y2xlIGZpbGw9IiM5OTkiIGN4PSI1IiBjeT0iMSIgcj0iMSIvPgo8Y2lyY2xlIGZpbGw9IiM5OTkiIGN4PSI1IiBjeT0iNSIgcj0iMSIvPgo8Y2lyY2xlIGZpbGw9IiM5OTkiIGN4PSIxIiBjeT0iNSIgcj0iMSIvPgo8L3N2Zz4K') no-repeat;
+  background-position: bottom right;
+  padding: 0 3px 3px 0;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  box-sizing: border-box;
+  cursor: se-resize;
+}
+
+.react-resizable-handle-se {
+  width: 20px;
+  height: 20px;
+  cursor: se-resize;
+}
+
+/* Monaco Editor Overrides for JSON Preview */
+.monaco-editor {
+  font-size: 13px !important;
+}
+
+.monaco-editor .view-lines .view-line {
+  font-family: 'Consolas', 'Courier New', monospace !important;
+}
+

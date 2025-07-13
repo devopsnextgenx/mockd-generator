@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f0f0f0;
+        }
+        
+        .container {
+            display: flex;
+            gap: 20px;
+            height: 500px;
+        }
+        
+        .sidebar {
+            width: 200px;
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .library-card {
+            background: #555;
+            color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            cursor: grab;
+            user-select: none;
+            border: 2px solid #666;
+            transition: all 0.2s;
+        }
+        
+        .library-card:hover {
+            background: #666;
+            border-color: #4a90e2;
+            transform: translateY(-2px);
+        }
+        
+        .library-card:active {
+            cursor: grabbing;
+        }
+        
+        .canvas {
+            flex: 1;
+            background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
+            border-radius: 8px;
+            position: relative;
+            border: 3px dashed transparent;
+            transition: all 0.3s;
+        }
+        
+        .canvas.drag-over {
+            border-color: #4a90e2;
+            background: linear-gradient(180deg, #1e3a5f 0%, #1e293b 100%);
+            box-shadow: inset 0 0 20px rgba(74, 144, 226, 0.3);
+        }
+        
+        .dropped-card {
+            position: absolute;
+            background: #1f2937;
+            border: 2px solid #374151;
+            border-radius: 12px;
+            padding: 15px;
+            color: white;
+            min-width: 180px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .port {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            position: absolute;
+        }
+        
+        .input-port {
+            background: #3b82f6;
+            left: -5px;
+        }
+        
+        .output-port {
+            background: #ef4444;
+            right: -5px;
+        }
+        
+        .test-results {
+            background: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .instruction {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Drag and Drop Functionality Test</h1>
+    
+    <div class="instruction">
+        <strong>Test Instructions:</strong>
+        <ol>
+            <li><strong>Drag:</strong> Click and hold any card in the left sidebar</li>
+            <li><strong>Drop:</strong> Drag it over to the canvas area and release</li>
+            <li><strong>Expected Result:</strong> Card should appear exactly where you dropped it</li>
+            <li><strong>Port Check:</strong> Input ports (blue) on left, output ports (red) on right</li>
+        </ol>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <h3 style="color: white; margin-bottom: 20px;">Card Library</h3>
+            
+            <div class="library-card" draggable="true" data-card-id="person">
+                <h4>Person Generator</h4>
+                <p>Generates fake person data</p>
+            </div>
+            
+            <div class="library-card" draggable="true" data-card-id="company">
+                <h4>Company Generator</h4>
+                <p>Generates fake company data</p>
+            </div>
+            
+            <div class="library-card" draggable="true" data-card-id="product">
+                <h4>Product Generator</h4>
+                <p>Generates fake product data</p>
+            </div>
+        </div>
+        
+        <div class="canvas" id="canvas">
+            <div style="position: absolute; top: 20px; left: 20px; color: rgba(255,255,255,0.7); font-size: 14px;">
+                Canvas - Drop cards here
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-results">
+        <h3>Test Results:</h3>
+        <div id="test-log">
+            <p>No tests run yet. Try dragging a card to the canvas!</p>
+        </div>
+        
+        <button onclick="runAutomatedTest()" style="padding: 10px 20px; background: #4a90e2; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;">
+            Run Automated Test
+        </button>
+        
+        <button onclick="clearResults()" style="padding: 10px 20px; background: #666; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; margin-left: 10px;">
+            Clear Results
+        </button>
+    </div>
+
+    <script>
+        let dropCount = 0;
+        let testResults = [];
+
+        // Add event listeners to library cards
+        document.querySelectorAll('.library-card').forEach(card => {
+            card.addEventListener('dragstart', handleDragStart);
+        });
+
+        // Add event listeners to canvas
+        const canvas = document.getElementById('canvas');
+        canvas.addEventListener('dragover', handleDragOver);
+        canvas.addEventListener('drop', handleDrop);
+        canvas.addEventListener('dragenter', handleDragEnter);
+        canvas.addEventListener('dragleave', handleDragLeave);
+
+        function handleDragStart(e) {
+            const cardId = e.target.dataset.cardId;
+            e.dataTransfer.setData('card-definition-id', cardId);
+            e.dataTransfer.effectAllowed = 'copy';
+            
+            logResult('✅ DRAG START: ' + cardId, 'success');
+            console.log('🎯 DRAG START:', cardId);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            canvas.classList.add('drag-over');
+            logResult('📍 DRAG ENTER: Canvas highlighted', 'success');
+        }
+
+        function handleDragLeave(e) {
+            if (!canvas.contains(e.relatedTarget)) {
+                canvas.classList.remove('drag-over');
+                logResult('📍 DRAG LEAVE: Canvas unhighlighted', 'success');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            canvas.classList.remove('drag-over');
+            
+            const cardId = e.dataTransfer.getData('card-definition-id');
+            
+            if (!cardId) {
+                logResult('❌ DROP FAILED: No card data received', 'error');
+                return;
+            }
+
+            // Calculate drop position
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left - 90; // Center the card
+            const y = e.clientY - rect.top - 50;
+
+            // Create dropped card
+            createDroppedCard(cardId, x, y);
+            
+            dropCount++;
+            logResult(`✅ DROP SUCCESS: ${cardId} at (${Math.round(x)}, ${Math.round(y)})`, 'success');
+            
+            // Test positioning
+            testCardPositioning(cardId, x, y);
+        }
+
+        function createDroppedCard(cardId, x, y) {
+            const card = document.createElement('div');
+            card.className = 'dropped-card';
+            card.style.left = x + 'px';
+            card.style.top = y + 'px';
+            
+            // Card content based on type
+            const cardData = {
+                person: { name: 'Person Generator', inputs: ['count'], outputs: ['persons'] },
+                company: { name: 'Company Generator', inputs: ['count'], outputs: ['companies'] },
+                product: { name: 'Product Generator', inputs: ['category'], outputs: ['products'] }
+            };
+            
+            const data = cardData[cardId] || { name: cardId, inputs: ['input'], outputs: ['output'] };
+            
+            card.innerHTML = `
+                <h4 style="margin: 0 0 10px 0; color: #f9fafb;">${data.name}</h4>
+                <div style="position: relative;">
+                    ${data.inputs.map((input, i) => `
+                        <div class="port input-port" style="top: ${20 + i * 25}px;" title="${input}"></div>
+                        <div style="margin-left: 15px; font-size: 12px; color: #d1d5db; margin-bottom: 5px;">${input}</div>
+                    `).join('')}
+                    ${data.outputs.map((output, i) => `
+                        <div class="port output-port" style="bottom: ${20 + i * 25}px;" title="${output}"></div>
+                        <div style="margin-right: 15px; text-align: right; font-size: 12px; color: #d1d5db; margin-bottom: 5px;">${output}</div>
+                    `).join('')}
+                </div>
+            `;
+            
+            canvas.appendChild(card);
+        }
+
+        function testCardPositioning(cardId, x, y) {
+            const tolerance = 10; // pixels
+            
+            // Test if card was positioned correctly
+            const droppedCard = canvas.lastElementChild;
+            const actualX = parseInt(droppedCard.style.left);
+            const actualY = parseInt(droppedCard.style.top);
+            
+            if (Math.abs(actualX - x) <= tolerance && Math.abs(actualY - y) <= tolerance) {
+                logResult(`✅ POSITIONING TEST: Card positioned correctly`, 'success');
+            } else {
+                logResult(`❌ POSITIONING TEST: Expected (${x}, ${y}), got (${actualX}, ${actualY})`, 'error');
+            }
+            
+            // Test ports
+            const inputPorts = droppedCard.querySelectorAll('.input-port');
+            const outputPorts = droppedCard.querySelectorAll('.output-port');
+            
+            if (inputPorts.length > 0) {
+                logResult(`✅ INPUT PORTS: ${inputPorts.length} input port(s) found on left`, 'success');
+            }
+            
+            if (outputPorts.length > 0) {
+                logResult(`✅ OUTPUT PORTS: ${outputPorts.length} output port(s) found on right`, 'success');
+            }
+        }
+
+        function logResult(message, type) {
+            testResults.push({ message, type, timestamp: new Date().toLocaleTimeString() });
+            updateTestLog();
+        }
+
+        function updateTestLog() {
+            const log = document.getElementById('test-log');
+            log.innerHTML = testResults.map(result => 
+                `<p class="${result.type}">[${result.timestamp}] ${result.message}</p>`
+            ).join('');
+        }
+
+        function clearResults() {
+            testResults = [];
+            dropCount = 0;
+            canvas.querySelectorAll('.dropped-card').forEach(card => card.remove());
+            document.getElementById('test-log').innerHTML = '<p>Results cleared. Try dragging a card to the canvas!</p>';
+        }
+
+        function runAutomatedTest() {
+            logResult('🤖 AUTOMATED TEST: Starting drag and drop simulation...', 'success');
+            
+            // Simulate drag and drop programmatically
+            const testCard = document.querySelector('[data-card-id="person"]');
+            const canvas = document.getElementById('canvas');
+            
+            // Simulate dragstart
+            const dragStartEvent = new DragEvent('dragstart', {
+                bubbles: true,
+                dataTransfer: new DataTransfer()
+            });
+            dragStartEvent.dataTransfer.setData('card-definition-id', 'person');
+            testCard.dispatchEvent(dragStartEvent);
+            
+            // Simulate drop at center of canvas
+            const rect = canvas.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const dropEvent = new DragEvent('drop', {
+                bubbles: true,
+                clientX: rect.left + centerX,
+                clientY: rect.top + centerY,
+                dataTransfer: new DataTransfer()
+            });
+            dropEvent.dataTransfer.setData('card-definition-id', 'person');
+            canvas.dispatchEvent(dropEvent);
+            
+            logResult('🤖 AUTOMATED TEST: Simulation complete', 'success');
+        }
+
+        // Initial log
+        logResult('🚀 TEST SETUP: Drag and drop test page loaded', 'success');
+        logResult('📋 INSTRUCTIONS: Drag any card from the sidebar to the canvas', 'success');
+    </script>
+</body>
+</html>

@@ -1,0 +1,382 @@
+{
+  "person": {
+    "id": "person",
+    "name": "Person Generator",
+    "description": "Generates fake person data including name, email, age, etc.",
+    "category": "Mock Data",
+    "inputPorts": [
+      {
+        "name": "count",
+        "type": "input",
+        "dataType": "number",
+        "defaultValue": 10
+      }
+    ],
+    "outputPorts": [
+      {
+        "name": "persons",
+        "type": "output",
+        "dataType": "array"
+      }
+    ],
+    "properties": [
+      {
+        "name": "includeEmail",
+        "type": "boolean",
+        "value": true,
+        "description": "Include email address"
+      },
+      {
+        "name": "includePhone",
+        "type": "boolean",
+        "value": true,
+        "description": "Include phone number"
+      },
+      {
+        "name": "includeAddress",
+        "type": "boolean",
+        "value": false,
+        "description": "Include address"
+      },
+      {
+        "name": "ageRange",
+        "type": "select",
+        "value": "adult",
+        "options": ["child", "teen", "adult", "senior"],
+        "description": "Age range for generated persons"
+      }
+    ],
+    "executor": "personGenerator"
+  },
+  "company": {
+    "id": "company",
+    "name": "Company Generator",
+    "description": "Generates fake company data including name, industry, size, etc.",
+    "category": "Mock Data",
+    "inputPorts": [
+      {
+        "name": "count",
+        "type": "input",
+        "dataType": "number",
+        "defaultValue": 5
+      }
+    ],
+    "outputPorts": [
+      {
+        "name": "companies",
+        "type": "output",
+        "dataType": "array"
+      }
+    ],
+    "properties": [
+      {
+        "name": "includeAddress",
+        "type": "boolean",
+        "value": true,
+        "description": "Include company address"
+      },
+      {
+        "name": "includeWebsite",
+        "type": "boolean",
+        "value": true,
+        "description": "Include website URL"
+      },
+      {
+        "name": "companySize",
+        "type": "select",
+        "value": "mixed",
+        "options": ["startup", "small", "medium", "large", "mixed"],
+        "description": "Company size category"
+      }
+    ],
+    "executor": "companyGenerator"
+  },
+  "number": {
+    "id": "number",
+    "name": "Number Generator",
+    "description": "Generates random numbers with various constraints",
+    "category": "Mock Data",
+    "inputPorts": [
+      {
+        "name": "count",
+        "type": "input",
+        "dataType": "number",
+        "defaultValue": 20
+      }
+    ],
+    "outputPorts": [
+      {
+        "name": "numbers",
+        "type": "output",
+        "dataType": "array"
+      }
+    ],
+    "properties": [
+      {
+        "name": "min",
+        "type": "number",
+        "value": 1,
+        "description": "Minimum value"
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "value": 100,
+        "description": "Maximum value"
+      },
+      {
+        "name": "precision",
+        "type": "number",
+        "value": 0,
+        "description": "Decimal places (0 for integers)"
+      }
+    ],
+    "executor": "numberGenerator"
+  },
+  "phone": {
+    "id": "phone",
+    "name": "Phone Generator",
+    "description": "Generates fake phone numbers in various formats",
+    "category": "Mock Data",
+    "inputPorts": [
+      {
+        "name": "count",
+        "type": "input",
+        "dataType": "number",
+        "defaultValue": 15
+      }
+    ],
+    "outputPorts": [
+      {
+        "name": "phones",
+        "type": "output",
+        "dataType": "array"
+      }
+    ],
+    "properties": [
+      {
+        "name": "format",
+        "type": "select",
+        "value": "international",
+        "options": ["local", "national", "international"],
+        "description": "Phone number format"
+      },
+      {
+        "name": "country",
+        "type": "select",
+        "value": "US",
+        "options": ["US", "UK", "CA", "AU", "DE", "FR"],
+        "description": "Country code"
+      }
+    ],
+    "executor": "phoneGenerator"
+  },
+  "internet": {
+    "id": "internet",
+    "name": "Internet Generator",
+    "description": "Generates internet-related data like emails, URLs, IPs",
+    "category": "Mock Data",
+    "inputPorts": [
+      {
+        "name": "count",
+        "type": "input",
+        "dataType": "number",
+        "defaultValue": 25
+      }
+    ],
+    "outputPorts": [
+      {
+        "name": "data",
+        "type": "output",
+        "dataType": "array"
+      }
+    ],
+    "properties": [
+      {
+        "name": "dataType",
+        "type": "select",
+        "value": "email",
+        "options": ["email", "url", "ip", "domain", "username"],
+        "description": "Type of internet data to generate"
+      },
+      {
+        "name": "provider",
+        "type": "select",
+        "value": "mixed",
+        "options": ["gmail", "yahoo", "hotmail", "company", "mixed"],
+        "description": "Email provider (for email type)"
+      }
+    ],
+    "executor": "internetGenerator"
+  },
+  "location": {
+    "id": "location",
+    "name": "Location Generator",
+    "description": "Generates location data including addresses, coordinates, cities",
+    "category": "Mock Data",
+    "inputPorts": [
+      {
+        "name": "count",
+        "type": "input",
+        "dataType": "number",
+        "defaultValue": 8
+      }
+    ],
+    "outputPorts": [
+      {
+        "name": "locations",
+        "type": "output",
+        "dataType": "array"
+      }
+    ],
+    "properties": [
+      {
+        "name": "includeCoordinates",
+        "type": "boolean",
+        "value": true,
+        "description": "Include latitude and longitude"
+      },
+      {
+        "name": "country",
+        "type": "select",
+        "value": "US",
+        "options": ["US", "UK", "CA", "AU", "DE", "FR", "mixed"],
+        "description": "Country for addresses"
+      },
+      {
+        "name": "locationType",
+        "type": "select",
+        "value": "address",
+        "options": ["address", "city", "coordinates", "zipcode"],
+        "description": "Type of location data"
+      }
+    ],
+    "executor": "locationGenerator"
+  },
+  "filter": {
+    "id": "filter",
+    "name": "Array Filter",
+    "description": "Filters array elements based on conditions",
+    "category": "Utility",
+    "inputPorts": [
+      {
+        "name": "array",
+        "type": "input",
+        "dataType": "array",
+        "defaultValue": []
+      }
+    ],
+    "outputPorts": [
+      {
+        "name": "filtered",
+        "type": "output",
+        "dataType": "array"
+      }
+    ],
+    "properties": [
+      {
+        "name": "field",
+        "type": "string",
+        "value": "",
+        "description": "Field to filter on"
+      },
+      {
+        "name": "operator",
+        "type": "select",
+        "value": "equals",
+        "options": ["equals", "contains", "greater", "less", "exists"],
+        "description": "Filter operator"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "value": "",
+        "description": "Value to compare against"
+      }
+    ],
+    "executor": "filterGenerator"
+  },
+  "transform": {
+    "id": "transform",
+    "name": "Data Transform",
+    "description": "Transforms data structure and formats",
+    "category": "Utility",
+    "inputPorts": [
+      {
+        "name": "data",
+        "type": "input",
+        "dataType": "array",
+        "defaultValue": []
+      }
+    ],
+    "outputPorts": [
+      {
+        "name": "transformed",
+        "type": "output",
+        "dataType": "array"
+      }
+    ],
+    "properties": [
+      {
+        "name": "operation",
+        "type": "select",
+        "value": "map",
+        "options": ["map", "pluck", "groupBy", "sort"],
+        "description": "Transform operation"
+      },
+      {
+        "name": "field",
+        "type": "string",
+        "value": "",
+        "description": "Field to operate on"
+      }
+    ],
+    "executor": "transformGenerator"
+  },
+  "print-array": {
+    "id": "print-array",
+    "name": "Print Array",
+    "description": "Displays array data in a JSON code editor with VS Code dark theme",
+    "category": "Output",
+    "inputPorts": [
+      {
+        "name": "array",
+        "type": "input",
+        "dataType": "array",
+        "defaultValue": []
+      }
+    ],
+    "outputPorts": [
+      {
+        "name": "printed",
+        "type": "output",
+        "dataType": "array"
+      }
+    ],
+    "properties": [],
+    "executor": "printArrayExecutor"
+  },
+  "json-preview": {
+    "id": "json-preview",
+    "name": "JSON Preview",
+    "description": "Displays any data as formatted JSON in a code editor",
+    "category": "Output",
+    "inputPorts": [
+      {
+        "name": "data",
+        "type": "input",
+        "dataType": "any",
+        "defaultValue": {}
+      }
+    ],
+    "outputPorts": [
+      {
+        "name": "passthrough",
+        "type": "output",
+        "dataType": "any"
+      }
+    ],
+    "properties": [],
+    "executor": "jsonPreviewExecutor"
+  }
+}
